@@ -1,0 +1,5 @@
+C:\Users\arncc\Workspace\dotnet\2025-03-03_clase_persona\obj\Debug\net9.0\2025-03-03_clase_persona.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\arncc\Workspace\dotnet\2025-03-03_clase_persona\obj\Debug\net9.0\2025-03-03_clase_persona.AssemblyInfoInputs.cache
+C:\Users\arncc\Workspace\dotnet\2025-03-03_clase_persona\obj\Debug\net9.0\2025-03-03_clase_persona.AssemblyInfo.cs
+C:\Users\arncc\Workspace\dotnet\2025-03-03_clase_persona\obj\Debug\net9.0\2025-03-03_clase_persona.csproj.CoreCompileInputs.cache
+C:\Users\arncc\Workspace\dotnet\2025-03-03_clase_persona\obj\Debug\net9.0\2025-03-03_clase_persona.sourcelink.json
