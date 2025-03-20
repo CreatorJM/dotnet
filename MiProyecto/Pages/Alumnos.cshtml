@@ -1,0 +1,38 @@
+@page
+@model AlumnosModel
+
+@{
+    ViewData["Title"] = "Lista de Alumnos";
+}
+
+<h2>Lista de Alumnos</h2>
+
+<table border="1">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Apellido</th>
+            <th>Nombre</th>
+            <th>Parcial 1</th>
+            <th>Parcial 2</th>
+            <th>Parcial 3</th>
+            <th>Extraordinario</th>
+            <th>Promedio</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (System.Data.DataRow row in Model.Alumnos.Rows)
+        {
+            <tr>
+                <td>@row["id"]</td>
+                <td>@row["apellido"]</td>
+                <td>@row["nombre"]</td>
+                <td>@row["parcial1"]</td>
+                <td>@row["parcial2"]</td>
+                <td>@row["parcial3"]</td>
+                <td>@row["ext"]</td>
+                <td>@row["promedio"]</td>
+            </tr>
+        }
+    </tbody>
+</table>
