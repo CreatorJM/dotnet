@@ -1,0 +1,154 @@
+﻿@page
+@model IndexModel
+@{
+    ViewData["Title"] = "Home page";
+}
+
+<div class="text-center">
+    <h1 class="display-4">Welcome</h1>
+    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web
+            apps with ASP.NET Core</a>.</p>
+    <table id="tablaAlumnos" class="table table-bordered table-striped table-hover">
+        <thead class="thead-dark">
+            <tr>
+                <th scope="col">Id</th>
+                <th scope="col">Nombre</th>
+                <th scope="col">Apellidos</th>
+                <th scope="col">Parcial 1</th>
+                <th scope="col">Parcial 2</th>
+                <th scope="col">Parcial 3</th>
+                <th scope="col">Ext</th>
+                <th scope="col">Promedio</th>
+            </tr>
+        </thead>
+        <tbody>
+            @for (int i = 0; i < Model.dts.Tables[0].Rows.Count; i++)
+            {
+                <tr>
+                    <td>@Model.dts.Tables[0].Rows[i]["id"]</td>
+                    <td>@Model.dts.Tables[0].Rows[i]["Nombre"]</td>
+                    <td>@Model.dts.Tables[0].Rows[i]["Apellido"]</td>
+                    <td>@Model.dts.Tables[0].Rows[i]["Parcial1"]</td>
+                    <td>@Model.dts.Tables[0].Rows[i]["Parcial2"]</td>
+                    <td>@Model.dts.Tables[0].Rows[i]["Parcial3"]</td>
+                    <td>@Model.dts.Tables[0].Rows[i]["Ext"]</td>
+                    <td>@Model.dts.Tables[0].Rows[i]["Promedio"]</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+  
+    <h3>Aprovechamiento General</h3>
+    <canvas id="graficoAprovechamiento"></canvas>
+
+    <h3>Mejores Alumnos</h3>
+    <canvas id="graficoMejoresAlumnos"></canvas>
+
+    <h3>Moda de Calificaciones</h3>
+    <canvas id="graficoModaCalificaciones"></canvas>
+
+    <h3>Porcentaje de Aprobados y Reprobados</h3>
+    <canvas id="graficoAprobados"></canvas>
+</div>
+
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            console.log("Inicializando DataTables y gráficos con Chart.js...");
+
+            $('#tablaAlumnos').DataTable({
+                "paging": true,   
+                "searching": true, 
+                "ordering": false, 
+                "info": false,     
+                "lengthChange": false, 
+                "language": {
+                    "search": "Buscar:",
+                    "paginate": {
+                        "next": "Siguiente",
+                        "previous": "Anterior"
+                    }
+                }
+            });
+
+            var nombres = [];
+            var apellidos = [];
+            var promedios = [];
+
+            @foreach (System.Data.DataRow row in Model.dts.Tables[0].Rows)
+            {
+                <text>
+                nombres.push("@row["Nombre"]");
+                apellidos.push("@row["Apellido"]");
+                promedios.push(@row["Promedio"]);
+                </text>
+            }
+
+            console.log("Nombres:", nombres);
+            console.log("Apellidos:", apellidos);
+            console.log("Promedios:", promedios);
+
+            var ctxAprovechamiento = document.getElementById("graficoAprovechamiento").getContext("2d");
+            new Chart(ctxAprovechamiento, {
+                type: 'bar',
+                data: {
+                    labels: nombres.map((n, i) => `${n} ${apellidos[i]}`),
+                    datasets: [{
+                        label: "Promedio General",
+                        data: promedios,
+                        backgroundColor: "blue"
+                    }]
+                }
+            });
+
+            var topNombres = nombres.slice(0, 5);
+            var topApellidos = apellidos.slice(0, 5);
+            var topPromedios = promedios.slice(0, 5);
+
+            var ctxMejores = document.getElementById("graficoMejoresAlumnos").getContext("2d");
+            new Chart(ctxMejores, {
+                type: 'line',
+                data: {
+                    labels: topNombres.map((n, i) => `${n} ${topApellidos[i]}`),
+                    datasets: [{
+                        label: "Mejores Promedios",
+                        data: topPromedios,
+                        borderColor: "green",
+                        fill: false
+                    }]
+                }
+            });
+
+            var modaNotas = [60, 70, 80, 90, 100].map(rango => promedios.filter(p => p >= rango && p < rango + 10).length);
+
+            var ctxModa = document.getElementById("graficoModaCalificaciones").getContext("2d");
+            new Chart(ctxModa, {
+                type: 'bar',
+                data: {
+                    labels: ["60-69", "70-79", "80-89", "90-99", "100"],
+                    datasets: [{
+                        label: "Cantidad de Alumnos",
+                        data: modaNotas,
+                        backgroundColor: "orange"
+                    }]
+                }
+            });
+
+            var aprobados = promedios.filter(p => p >= 70).length;
+            var reprobados = promedios.length - aprobados;
+
+            var ctxAprobados = document.getElementById("graficoAprobados").getContext("2d");
+            new Chart(ctxAprobados, {
+                type: 'pie',
+                data: {
+                    labels: ["Aprobados", "Reprobados"],
+                    datasets: [{
+                        data: [aprobados, reprobados],
+                        backgroundColor: ["green", "red"]
+                    }]
+                }
+            });
+        });
+    </script>
+}
